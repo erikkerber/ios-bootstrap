@@ -1,0 +1,79 @@
+include:
+  - App/project.yml
+name: MyApp
+options:
+  bundleIdPrefix: com.distilledbits
+  createIntermediateGroups: true
+  deploymentTarget:
+    iOS: "10.0"
+  groupSortPosition: top
+  minimumXcodeGenVersion: 1.11.1
+  transitivelyLinkDependencies: true
+  xcodeVersion: "10.0"
+configs:
+  Debug: debug
+  Release: release
+settingGroups:
+  base:
+    base:
+      CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES: NO
+      CLANG_MODULES_AUTOLINK: NO
+      MARKETING_VERSION: 1.0
+      TARGETED_DEVICE_FAMILY: 1 #iPhone
+    configs:
+      Debug:
+        OTHER_SWIFT_FLAGS: "-D DEBUG -D ENABLE_DEBUG_LOGGING"
+        OTHER_CODE_SIGN_FLAGS: --timestamp=none
+        SWIFT_OPTIMIZATION_LEVEL: -Onone
+      Release:
+        GCC_OPTIMIZATION_LEVEL: s
+        SWIFT_OPTIMIZATION_LEVEL: -O
+  app:
+    base:
+      CODE_SIGN_STYLE: Manual
+      DEVELOPMENT_TEAM: D9LCY75JDG
+    configs:
+      Debug:
+        CODE_SIGN_IDENTITY: "iPhone Developer"
+      Release:
+        CODE_SIGN_IDENTITY: "iPhone Distribution: MyOrg (AAAAAAAAA)"
+        CODE_SIGN_IDENTITY[sdk=iphoneos*]: "iPhone Distribution: Target (AAAAAAAAA)"
+    groups:
+      - base
+  framework:
+    base:
+      APPLICATION_EXTENSION_API_ONLY: YES
+    groups:
+      - base
+
+targetTemplates:
+  # Platform
+  iOS:
+    platform: iOS
+    settings:
+      groups: [base]
+
+  # Target
+  dynamic framework:
+    type: framework
+    settings:
+      groups: [framework]
+  static library:
+    type: library.static
+    settings:
+      groups: [framework]
+      base:
+        SWIFT_OBJC_INTERFACE_HEADER_NAME: # Blank to prevent generation
+  resource bundle:
+    type: bundle
+  app:
+    type: application
+    settings:
+      groups: [app]
+      base:
+        SWIFT_OBJC_INTERFACE_HEADER_NAME: # Blank to prevent generation
+  tests:
+    type: bundle.unit-test
+    settings:
+      base:
+        SWIFT_OBJC_INTERFACE_HEADER_NAME: # Blank to prevent generation

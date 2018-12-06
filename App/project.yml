@@ -1,0 +1,34 @@
+targets:
+  MyApp:
+    # Look for the Harmony scheme in the root project file, which requires the "long-hand"
+    # form of scheme generation due to the need for the TEST envirnment variable.
+    # scheme:
+    templates: [iOS, app]
+    settings:
+      base:
+        DISPLAY_NAME: MyApp
+        PRODUCT_NAME: MyApp
+        FULL_PRODUCT_NAME: MyApp.app
+        PRODUCT_BUNDLE_IDENTIFIER: com.distilledbits.MyApp
+      configs:
+        Debug:
+          # ASSETCATALOG_COMPILER_APPICON_NAME: AppIconDev
+          PROVISIONING_PROFILE_SPECIFIER: My Development Profile
+        Release:
+          # ASSETCATALOG_COMPILER_APPICON_NAME: AppIconShiny
+          COPY_PHASE_STRIP: YES
+          PROVISIONING_PROFILE_SPECIFIER: My App Store Profile
+    sources: App/Sources
+    dependencies:
+      - carthage: RIBs
+      - carthage: RxSwift
+
+  MyApp Tests:
+    templates: [iOS, tests]
+    settings:
+      base:
+        PRODUCT_NAME: MyAppTests
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/MyApp.app/MyApp
+    sources: App/Tests
+    dependencies:
+      - target: MyApp

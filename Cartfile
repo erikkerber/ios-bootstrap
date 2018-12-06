@@ -1,0 +1,2 @@
+github "uber/RIBs" ~> 0.9
+github "quick/Nimble" ~> 7.3.1
